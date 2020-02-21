@@ -33,7 +33,11 @@ compress([H|T],X) :- unique(T,H),append([H],X1,X),compress(T,X1).
 compress([H|T],X) :- \+(unique(T,H)),append([],X1,X),compress(T,X1).
 
 % 9. Pack consecutive duplicates of list elements into sublists.
-pack([H|T],X) :- 
+subl(A,[],Y,R) :- append([],[A],Y),append([],[],R).
+subl(A,[B|C],Y,R) :- A=B,subl(B,C,Y1,R),append([A],Y1,Y).
+subl(A,[B|C],Y,R) :- A\=B,append([A],[],Y),append([],[B|C],R).
+pack([],[]).
+pack([H|T],X) :- subl(H,T,Y,R),pack(R,X1),append([Y],X1,X).
 
 % 15. Duplicate elements of a list.
 dupli([],[]).
