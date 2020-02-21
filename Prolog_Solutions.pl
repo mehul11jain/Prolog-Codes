@@ -39,6 +39,14 @@ subl(A,[B|C],Y,R) :- A\=B,append([A],[],Y),append([],[B|C],R).
 pack([],[]).
 pack([H|T],X) :- subl(H,T,Y,R),pack(R,X1),append([Y],X1,X).
 
+% 10. Run-length encoding of a list.
+frequency(A,[],Y,R) :- Y=1,append([],[],R).
+frequency(A,[B|C],Y,R) :- A=B,frequency(B,C,Y1,R),Y is Y1+1.
+frequency(A,[B|C],Y,R) :- A\=B,Y=1,append([],[B|C],R).
+encode([],[]).
+encode([H|T],X) :- frequency(H,T,Y,R),encode(R,X1),append([[Y,H]],X1,X).
+
+
 % 15. Duplicate elements of a list.
 dupli([],[]).
 dupli([H|T],X) :- append([H,H],X1,X),dupli(T,X1).
