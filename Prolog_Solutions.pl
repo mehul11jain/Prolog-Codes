@@ -46,16 +46,41 @@ frequency(A,[B|C],Y,R) :- A\=B,Y=1,append([],[B|C],R).
 encode([],[]).
 encode([H|T],X) :- frequency(H,T,Y,R),encode(R,X1),append([[Y,H]],X1,X).
 
+% 11.  Modified run-length encoding.
+freq(A,[],Y,R) :- Y=1,append([],[],R).
+freq(A,[B|C],Y,R) :- A=B,freq(B,C,Y1,R),Y is Y1+1.
+freq(A,[B|C],Y,R) :- A\=B,Y=1,append([],[B|C],R).
+encode_modified([],[]).
+encode_modified([H|T],X) :- freq(H,T,Y,R),encode_modified(R,X1),Y\=1,append([[Y,H]],X1,X).
+encode_modified([H|T],X) :- freq(H,T,Y,R),encode_modified(R,X1),Y=1,append([H],X1,X).
 
-% 15. Duplicate elements of a list.
+% 12. Decode a run-length encoded list.
+unwrap([0|_],[]). 
+unwrap([A|B],X) :- A\=0,A1 is A-1,unwrap([A1|B],X1),append(B,X1,X).
+decode([],[]).
+decode([H|T],X) :- is_list(H),unwrap(H,Y),decode(T,X1),append(Y,X1,X).
+decode([H|T],X) :- \+(is_list(H)),decode(T,X1),append([H],X1,X).
+
+% 13. Same as 11.
+
+% 14. Duplicate elements of a list.
 dupli([],[]).
 dupli([H|T],X) :- append([H,H],X1,X),dupli(T,X1).
 
-% 16. Duplicate elements of a list given number of times.
-add(_,0,[]).
+% 15. Duplicate elements of a list given number of times.
+add(_,1,[]).
 add(H,K,X) :- append([H],X1,X),K1 is K-1,add(H,K1,X1).
 dupli([],_,X):-write(X).
 dupli([H|T],K,X) :- add(H,K,X1),append(X,X1,Y),dupli(T,K,Y).
+
+% 16. Drop every N'th element from a list.
+drop([H|T],0,[H]).
+drop([H|T],N,X) :- N1 is N-1,N1\=0,drop(T,N1,X1),append([H],X1,X).
+drop([H|T],N,X) :- N1 is N-1,N1=0,drop(T,N1,X1),append([],X1,X).
+
+% 17. Split a list into two parts; the length of the first part is given.
+split([H|T],0,[],[H|T]).
+split([H|T],N,L1,L2) :- N\=0,N1 is N-1,split(T,N1,L,L2),append([H],L,L1). 
 
 
 % 22. list containing all integers in a given range.
