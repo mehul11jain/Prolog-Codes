@@ -1,24 +1,25 @@
 % 1. last element in a list.
-last([H|T]) :- length(T,X),X=:=0,write(H).
-last([H|T]) :- last(T).
+my_last(H,[H|[]]).
+my_last(X,[H|T]) :- my_last(X,T).
 
 % 2. 2nd last element in the list.
-slast([H|T]) :- length(T,X),X=:=1,write(H).
-slast([H|T]) :- slast(T).
+slast(H,[H|T]) :- length(T,Y),Y=:=1.
+slast(X,[H|T]) :- slast(X,T).
 
 % 3. Kth element in the list.
-kth([H|T],K) :- K=:=1,write(H).
-kth([H|T],K) :- K1 is K-1,kth(T,K1).
+element_at(H,[H|T],K) :- K=:=1.
+element_at(X,[H|T],K) :- K1 is K-1,element_at(X,T,K1).
 
 % 4. Number of elements in list.
 count([],0).
 count([H|T],C) :- count(T,C1),C is C1+1.
 
 % 5. Reverse a list.
-rever(X,L) :- reverse(X, L).
+rever([],[]).
+rever(X,[H|T]) :- rever(X1,T),append(X1,[H],X).
 
 % 6. check if the list is palindrome.
-ispal(L) :- reverse(L,X),X==L. 
+ispal(L) :- rever(X,L),X==L. 
 
 % 7. Flatten a nested list structure.
 my_flatten([],X) :- write(X).
@@ -82,6 +83,16 @@ drop([H|T],N,X) :- N1 is N-1,N1=0,drop(T,N1,X1),append([],X1,X).
 split([H|T],0,[],[H|T]).
 split([H|T],N,L1,L2) :- N\=0,N1 is N-1,split(T,N1,L,L2),append([H],L,L1). 
 
+% 18. Extract a slice from a list.
+slice(_,1,0,[]).
+slice([H|T],I,K,L) :- I\=1,I1 is I-1,K1 is K-1,slice(T,I1,K1,L).
+slice([H|T],1,K,L) :- K\=0,K1 is K-1,slice(T,I1,K1,L1),append([H],L1,L).
+
+% 19. Rotate a list N places to the left.
+apnd([A|B],0,[],[A|B]).
+apnd([A|B],C,L,R) :- C1 is C-1,apnd(B,C1,L1,R),append([A],L1,L).
+rotate([H|T],N,X) :- N<0,length(T,Y),N1 is 1+N+Y,rotate([H|T],N1,X).
+rotate([H|T],N,X) :- N>=0,apnd([H|T],N,L,R),append(R,L,X).
 
 % 22. list containing all integers in a given range.
 range(X,X,[X]).
