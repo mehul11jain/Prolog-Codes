@@ -94,6 +94,15 @@ apnd([A|B],C,L,R) :- C1 is C-1,apnd(B,C1,L1,R),append([A],L1,L).
 rotate([H|T],N,X) :- N<0,length(T,Y),N1 is 1+N+Y,rotate([H|T],N1,X).
 rotate([H|T],N,X) :- N>=0,apnd([H|T],N,L,R),append(R,L,X).
 
+% 20. Remove the k'th element from a list.
+remove_at(H,[H|T],1,T).
+remove_at(X,[H|T],N,R) :- N1 is N-1,remove_at(X,T,N1,R1),append([H],R1,R).
+
+% 21. Insert an element at a given position into a list.
+insert_at(X,T,1,[X|T]).
+insert_at(X,[H|T],N,L) :- N1 is N-1,insert_at(X,T,N1,L1),append([H],L1,L).
+
+
 % 22. list containing all integers in a given range.
 range(X,X,[X]).
 range(X,Y,[X|L]) :- X=\=Y,X1 is X+1,range(X1,Y,L).
@@ -128,6 +137,8 @@ rev(N) :- N=:=0,nl.
 
 %//============================================================================================================================================//
 %//================================================================= Assignment 2 =============================================================//
+
+
 % 1. splt(N, List, Left, Right)  - splits a list of length >= N into two parts Left and Right at position N.
 splt(1, [A|R], [A], R).
 splt(N, [A|R], [A|L1], L2) :- N > 1, N1 is N - 1, splt(N1, R, L1, L2).
@@ -135,8 +146,6 @@ splt(N, [A|R], [A|L1], L2) :- N > 1, N1 is N - 1, splt(N1, R, L1, L2).
 % 2. number_codes which  splits a number- 479- into a list of integers- one for each digit- starting from 48 for 0, 49 for 1 and so on..
 number_codes(0,[]).
 number_codes(N,X) :- N\=0,number_codes(N\\10,X1),T1 is mod(N,10)+48,append([T1],X1,X).
-
-
 
 
 
