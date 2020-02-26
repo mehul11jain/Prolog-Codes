@@ -1,3 +1,5 @@
+%//----------------------------------------------------------------------- List Problems---------------------------------------------------------------//
+
 % 1. last element in a list.
 my_last(H,[H|[]]).
 my_last(X,[H|T]) :- my_last(X,T).
@@ -107,9 +109,30 @@ insert_at(X,[H|T],N,L) :- N1 is N-1,insert_at(X,T,N1,L1),append([H],L1,L).
 range(X,X,[X]).
 range(X,Y,[X|L]) :- X=\=Y,X1 is X+1,range(X1,Y,L).
 
+% 23. Extract a given number of randomly selected elements from a list.
+rnd_select(R,0,[]).
+rnd_select(R,N,L) :- N1 is N-1,rnd_select(R,N1,L1),random_member(X,R),append(L1,[X],L).
+
+% 24.  Lotto: Draw N different random numbers from the set 1..M.
 
 
 
+%//-----------------------------------------------------------------------------------------------------------------------------------------------//
+
+%-----------------------------------------------------------------Arithmetic Problems------------------------------------------------------------//
+% 1. Determine whether a given integer number is prime.
+divisible(N,T) :- T\=1,0 is mod(N,T);T\=1,T1 is T-1,divisible(N,T1).
+is_prime(0).
+is_prime(N):- N\=1,T is N-1,\+(divisible(N,T)).
+
+% 2. Determine the prime factors of a given positive integer.
+divide(N,1,[]).
+divide(N,N1,L1) :- 0 is mod(N,N1),N2 is N1-1,is_prime(N1),append([N1],L2,L1),divide(N,N2,L2).
+divide(N,N1,L1) :- 0 is mod(N,N1),N2 is N1-1,\+(is_prime(N1)),append([],L2,L1),divide(N,N2,L2).
+divide(N,N1,L1) :- \+(0 is mod(N,N1)),N2 is N1-1,divide(N,N2,L2),append([],L2,L1).
+prime_factors(N,L) :- N1 is N-1,divide(N,N1,L1),append([],L1,L3),reverse(L3,L).
+
+%-----------------------------------------------------------------------------------------------------------------------------------------------//
 
 %//============================================================================================================================================//
 %//=============================================================== Assignment 1 ================================================================//
@@ -127,8 +150,10 @@ cnt(C,[H|T],N) :- C=:=H,cnt(C,T,N1),N is N1+1.
 cnt(C,[H|T],N) :- C=\=H,cnt(C,T,N1),N is N1.
 
 % A3. reverse a number.
-rev(N) :- N>0,C is mod(N,10),write(C),rev(N//10).
-rev(N) :- N=:=0,nl.
+bac(0,R,R).
+bac(N,R,T):- C is mod(N,10),N1 is N//10,R1 is R*10+C,bac(N1,R1,T).
+rev(0,0).
+rev(N,Ans) :- bac(N,0,T),Ans is T.
 
 %//============================================================================================================================================//
 %//============================================================================================================================================//
@@ -147,7 +172,12 @@ splt(N, [A|R], [A|L1], L2) :- N > 1, N1 is N - 1, splt(N1, R, L1, L2).
 number_codes(0,[]).
 number_codes(N,X) :- N\=0,number_codes(N\\10,X1),T1 is mod(N,10)+48,append([T1],X1,X).
 
-
+% 3. Insertion sort.
+isort([],[]).
+isort([F|R],Ans) :- isort(R, A1), sortedIns(F, A1, Ans).
+sortedIns(N,[],[N]).
+sortedIns(N,[F|R],[N | [F | R]]) :- N < F.
+sortedIns(N,[F|R], [F|Ans]) :- N >=F, sortedIns(N, R, Ans).
 
 
 %//============================================================================================================================================//
@@ -171,8 +201,6 @@ count([X1|T],X,Z):- X1\=X,count(T,X,Z).
 crdnltyHigh([],K,0).
 crdnltyHigh([H|T],K,N) :- count([H|T],H,A),A=:=K,crdnltyHigh(T,K,N1),N is N1+1.
 crdnltyHigh([H|T],K,N) :- count([H|T],H,A),A=\=K,crdnltyHigh(T,K,N1),N is N1.
-
-
 
 %//============================================================================================================================================//
 %//============================================================================================================================================//
